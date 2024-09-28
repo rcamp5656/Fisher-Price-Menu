@@ -1,3 +1,4 @@
+$Debug
 Dim sources As String
 Dim choices As String
 Dim SIDES As Integer
@@ -128,7 +129,7 @@ Do
         runit3a = Mid$(runit1a, 1, Len(runit1a) - 4)
         runit4a = Mid$(runit1a, 1, Len(runit1a) - 4)
         loopit1 = 1
-        GoTo cont1
+        GoSub writefile_1
     End If
 
     If Len(runit) And _FileExists(runit) And SIDES = 2 Then
@@ -143,10 +144,11 @@ Do
         If loopit2 = 2 Then
             runit1bb = runit
             runit1bb = Mid$(runit1bb, 27, Len(runit1bb) - 4)
-            runit3b = Mid$(runit1bb, 1, Len(runit1bb) - 4)
-            runit4b = Mid$(runit1bb, 1, Len(runit1bb) - 4)
+            runit2b = Mid$(runit1bb, 1, Len(runit1bb) - 4)
+            runit4b = Mid$(runit1ba, 1, Len(runit1ba) - 4)
         End If
-        GoTo cont1
+        Print ">>>====>>> "; UserInputFile1a
+        GoSub cont1
     End If
     cont1:
     If loopit1 = 1 Then GoTo endingloop
@@ -163,7 +165,6 @@ Loop
 endingloop:
 If TwoSided = "N" Then GoSub choose_OPtions_One_Sided
 If TwoSided = "Y" Then GoSub choose_Options_Two_Sided
-GoSub printitout
 GoTo choosedrive
 GoTo finish
 End
@@ -188,15 +189,8 @@ Print "Names of the Files that you"
 Print "have Chosen for Side One"
 Print
 Print "[S1] >>>====>>> "; UserInputFile1a
-Print "[S1] >>>====>>> "; UserInputFile2a
-Print "[OP] >>>====>>> "; UserInputFile3a
 
 Print
-Input "Enter the tempo in BPM for Side #1 : ", tempo1
-If tempo1 = "" Then tempo1 = "56": Print tempo1
-Input "Enter the offset value in decimal for Side # 1 : ", offset1
-If offset1 = "" Then offset1 = "32": Print offset1
-GoSub check_it_out_One_Sided
 Return
 GoTo choosedrive
 choose_Options_Two_Sided:
@@ -212,8 +206,8 @@ destination4 = "c:\Fisher-Price-Menu\SRC\"
 destination5 = "c:\Fisher-Price-Menu\TEMP\"
 
 UserInputFile1b = runit1b + ".mid"
-UserInputfile2b = runit2b + ".fpr"
-UserInputFile3b = runit3b + ".mid"
+UserInputfile2b = runit2b + ".mid"
+UserInputFile3b = runit3b + ".fpr"
 UserInputFile4b = runit4b + ".fpr"
 UserInputFile5b = runit3b + "_And_" + runit4b + ".scad"
 Print
@@ -223,19 +217,8 @@ Print "have Chosen for Sides One & Two"
 Print
 Print "[S1] >>>====>>> "; UserInputFile1b
 Print "[S2] >>>====>>> "; UserInputfile2b
-Print "[S1] >>>====>>> "; UserInputFile3b
-Print "[S2] >>>====>>> "; UserInputFile4b
-Print "[OP] >>>====>>> "; UserInputFile5b
 
 Print
-Input "Enter the tempo in BPM for Side #1 : ", tempo2
-If tempo2 = "" Then tempo2 = "56": Print tempo2
-Input "Enter the tempo in BPM for Side #2 : ", tempo3
-If tempo3 = "" Then tempo3 = "56": Print tempo3
-Input "Enter the offset value in decimal for Side # 1 : ", offset2
-If offset2 = "" Then offset2 = "32": Print offset2
-Input "Enter the offset value in decimal for Side # 2 : ", offset3
-If offset3 = "" Then offset3 = "32": Print offset3
 GoSub check_it_out_two_sided
 Return
 check_it_out_One_Sided:
@@ -250,19 +233,14 @@ Print "have Chosen for Side One"
 Print
 Print ">>>====>>> "; UserInputFile1a
 Print
-Print "Tempo value in BPM that you"
-Print "have chosen for Side One : "; tempo1
-If tempo1 = "" Then tempo1 = "56"
-Print
-Print "Offset Value in decimal that you"
-Print "have chosen for Side One : "; offset1
-If offset1 = "" Then offset1 = "32"
 Print
 Print "Is this all Correct [Y] or [N] "
 choices = Input$(1)
 choices = UCase$(choices)
 Print choices: Print
-If choices = "Y" Then Return
+If choices = "Y" Then GoSub writefile_1: GoSub playfile
+GoSub cont1
+
 If choices = "N" Then GoSub choose_OPtions_One_Sided
 If choices = "Q" Then GoTo choosedrive
 Return
@@ -278,23 +256,13 @@ Print "Names of the Files that you"
 Print "have Chosen for Sides One & Two"
 Print
 Print ">>>====>>> "; UserInputFile1b
-Print ">>>====>>> "; UserInputFile3b
-Print
-Print "Tempo value in BPM that you"
-Print "have chosen for Side One : "; tempo2
-Print "Tempo value in BPM that you"
-Print "have chosen for Side Two : "; tempo3
-Print
-Print "Offset Value in BPM that you"
-Print "have chosen for Side One : "; offset2
-Print "Offset Value in BPM that you"
-Print "have chosen for Side Two : "; offset3
+Print ">>>====>>> "; UserInputfile2b
 Print
 Print "Is this all Correct [Y] or [N] "
 choices = Input$(1)
 choices = UCase$(choices)
 Print choices: Print
-If choices = "Y" Then Return
+If choices = "Y" Then GoSub writefile_2: GoSub playfile
 If choices = "N" Then GoSub choose_Options_Two_Sided
 If choices = "Q" Then GoTo choosedrive
 GoTo check_it_out_two_sided
@@ -320,7 +288,7 @@ If Len(runit) And _FileExists(runit) And SIDES = 2 Then
         runit1bb = runit
         runit1bb = Mid$(runit1bb, 27, Len(runit1bb) - 4)
         runit2b = Mid$(runit1bb, 1, Len(runit1bb) - 4)
-        runit4b = Mid$(runit1bb, 1, Len(runit1bb) - 4)
+        runit4b = Mid$(runit1ba, 1, Len(runit1ba) - 4)
     End If
 End If
 destination1 = "c:\Fisher-Price-Menu\FPR"
@@ -335,20 +303,39 @@ Return
 writefile_1:
 _FullScreen
 sounding = "midi"
-UserInputFile1a = runit2a + ".mid"
-UserInputFile2a = runit2a + ".fpr"
+UserInputFile1a = runit2a + ".fpr"
+UserInputFile2a = runit2a + ".mid"
 UserInputFile3a = runit2a + ".scad"
-destination1 = "c:\Fisher-Price-Menu\FPR"
-destination2 = "c:\Fisher-Price-Menu\MIDI"
-destination3 = "c:\Fisher-Price-Menu\SCAD"
-destination4 = "c:\Fisher-Price-Menu\SRC"
-destination5 = "c:\Fisher-Price-Menu\TEMP"
-sounding = "midi"
-Shell destination4 + "\" + "music_box_tracker.py --mid " + destination2 + "\" + UserInputFile1a + " --audio " + sounding + " --bpm " + tempo1 + " --offset " + offset1
-
-Shell "copy " + destination2 + "\" + UserInputFile2a + " " + destination1 + "\" + UserInputFile2a
-Shell "erase " + destination2 + "\" + UserInputFile2a
-Shell destination4 + "fpr_to_scad.py --fpr " + destination1 + "\" + UserInputFile2a + " --scad " + destination3 + "\" + UserInputFile3a + " --Thickness 3"
+destination1 = "c:\Fisher-Price-Menu\FPR\"
+destination2 = "c:\Fisher-Price-Menu\MIDI\"
+destination3 = "c:\Fisher-Price-Menu\SCAD\"
+destination4 = "c:\Fisher-Price-Menu\SRC\"
+destination5 = "c:\Fisher-Price-Menu\TEMP\"
+Cls
+Print
+Print UserInputFile2a
+Print
+Print "Press ay ky to continue"
+Do While InKey$ = ""
+Loop
+Shell _Hide Chr$(34) + "scide.exe" + Chr$(34)
+shell _Hide chr$(34) + "(;"+chr$(34)
+'// Test that your MIDI file can be transposed and listen to the result
+shell _hide chr$(34)+ "f = FisherPriceRecords.openMIDI("
+~/Berlo1.mid".standardizePath, "Bolero");"
+f.success.if({
+    f.p.play;
+})
+//Note that the durations in the pattern are from the MIDI file.
+//When you create the disk, the notes will be scaled to cover one rotation
+// of the disk.
+//The rotational speed of the disk depends on how tightly the spring is wound.
+?
+)
+(
+f.realise(2); // This is a short loop, so repeat it
+f.write("~/bolero2.scad".standardizePath);
+)
 
 Print "Done"
 Return
@@ -362,34 +349,21 @@ destination4 = "c:\Fisher-Price-Menu\SRC\"
 destination5 = "c:\Fisher-Price-Menu\TEMP\"
 
 UserInputFile1b = runit1b + ".mid"
-UserInputfile2b = runit2b + ".fpr"
-UserInputFile3b = runit3b + ".mid"
-UserInputFile4b = runit4b + ".fpr"
-UserInputFile5b = runit2b + "_And_" + runit4b + ".scad"
-Cls
-sounding = "midi"
-Shell destination4 + "music_box_tracker.py --mid " + destination2 + UserInputFile1b + " --audio " + sounding + " --bpm " + tempo2 + " --offset " + offset2
-Shell "copy " + destination2 + UserInputfile2b + " " + destination2 + UserInputFile3b
-Shell "erase " + destination2 + UserInputfile2b
-Shell destination4 + "music_box_tracker.py --mid " + destination2 + UserInputFile3b + " --audio " + sounding + " --bpm " + tempo3 + " --offset " + offset3
-Shell "copy " + destination2 + UserInputFile4b + " " + destination1 + UserInputFile4b
-Shell "erase " + destination2 + UserInputFile4b
+UserInputfile2b = runit2b + ".mid"
 
 
-Print "Writing SCAD file ......"
 
-Shell destination4 + "fpr_to_scad.py" + " --fpr " + destination2 + UserInputfile2b + " --fprverso" + " " + destination3 + UserInputFile5b + " --thickness 5"
-Print
+Print "......"
 Print "Done"
 Print
 GoTo choosedrive
 Return
-printitout:
+playfile:
 If TwoSided = "N" Then
-    GoSub writefile_1
+    Shell _Hide Chr$(34) + "f.p.play" + "(\" + runit2a + ")"
 End If
 If TwoSided = "Y" Then
-    GoSub writefile_2
+    Shell _Hide Chr$(34) + "f.p.play" + "(\" + runit2a + ")"
 End If
 Return
 choosedrive:

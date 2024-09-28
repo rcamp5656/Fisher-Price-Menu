@@ -7,7 +7,7 @@ from record import Record
 
 class Midi:
     program = 10
-    port = 0
+    port = None
 
     def open_port(self, portname):
         try:
