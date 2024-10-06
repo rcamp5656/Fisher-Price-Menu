@@ -15,6 +15,6 @@ pip install wheel
 pip install mido
 pip install python-rtmidi
 pin install setuptools wheel
-pip install –upgrade setuptools wheel
 pip install playsound
+pip install timidity
 
