@@ -10,11 +10,16 @@ Go to your command prompt as administrator.
 
 Type in the following:
 
-pip install unicurses
+pip install windows-curses
 pip install wheel
 pip install mido
 pip install python-rtmidi
 pin install setuptools wheel
-pip install –upgrade setuptools wheel
+pip install â€“upgrade setuptools wheel
 pip install playsound
+pip install pretty-midi
+pip install numpy
+
+And there are a few other dependencies once I remember them all.
+
 
