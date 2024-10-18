@@ -1,44 +1,94 @@
-# Fisher-Price-Menu
+Music box tune tracker. Create or import a tune and turn it into a record for the Fisher Price Record Player toy
 
-A lot of people have asked me basically how do I install Python to make the Fisher Price Records and have all of the scripts work.
+ `Music Box Tune Tracker` uses the same file format (.fpr) from `Fred Record Player` available at https://www.instructables.com/id/3D-printing-records-for-a-Fisher-Price-toy-record-/
 
-First thing is that you have to install the latest version of Python.
+For usage, use the `--help` argument. Some arguments are available only if some optional package are installed.
 
-Second thing is that you have to install version 2022 of Microsoft Visual Studio Tools.
+# Screenshot
 
-Third thing is that you have to install the 2021 version of Open Scad.
+<img src="https://github.com/odrevet/music-box-tune-tracker/blob/master/screenshot/screenshot.png" width="6400" height="480" />
 
-Dependencies for Python are needed.
+# Prerequisites
 
-Go to your command prompt as administrator.
+This software uses `Python` with the `Curses` library for the User Interface.
 
-Type in the following:
+# Optional Dependancies
 
-pip install unicurses
+To preview what your music will sound like on a fisher price record, there are two options:
 
-pip install wheel
+* `Wav` playback is the more easy and is recommanded.
+* `Midi` playback will add extra functionalities but will require a little more configurations.
 
-pip install mido
+## WAV audio backend
 
-pip install python-rtmidi
-
-pin install setuptools wheel
-
-pip install –upgrade setuptools wheel
-
+```
 pip install playsound
+```
 
-Once you have this all installed , you need to convert your MIDI files with Music Box Maniacs Create, I have enclosed some already
-converted midi files in a folder called maniacs plus some 2000 plus midi files.
+## Midi audio backend and extra functionalities
 
-The batch file that you would run is fisherpricecreate, make sure that you have no spaces in your MIDI filenames.
-There are also some finished scad files and stl files that are ready to go, they are once sided, it is best to print
-one-sided and glue them together as a two sided piece. There is two sided also just follow the prompts in my batch file.
+For more informations about using midi as an audio backend and import/export from midi files, see [midi.md](doc/midi.md).
 
-The QB64 program is not yet finished I will be working on it too...
+# music_box_tracker.py
 
-It just needs to have the entire batch file inserted as shell comands, that will be done later on.
+Edit and preview `fpr` files.
+
+## Keys
+
+* Arrow key: Move the cursor
+* Space: add/remove a note at cursor
+* p: play/stop
+* t: play the tone at cursor
+* r: play the column of tones at cursor
+* s: save
+* l: load
+* x: export to .mid (available only if the `mido` package is installed)
+* e: edit title
+* q: quit
+* o: move the playing start location to cursor
+* i: move the playing start location to the right
+* u: move the playing start location to the left
+* +: right shift the partition
+* -: left shift the partition
+
+# Convert .fpr to .scad
+
+.fpr file can be converted to .scad file by using the `fpr_to_scad.py` script
 
 
+```
+usage: fpr_to_scad.py [-h] [--fpr FPR] [--fprbis FPRBIS] [--scad SCAD]
+                      [--thickness THICKNESS]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --fpr FPR             name of fpr file
+  --fprbis FPRBIS       name of fpr file for second side
+  --scad SCAD           name of scad file to output
+  --thickness THICKNESS
+                        thickness in mm. Defaults to 3 if one
+                        side or 5 if two sides
+```
+
+# Convert .scad to .stl
+
+the scad file can be use with [OpenScad](https://www.openscad.org) to create a .stl file to 3D print the record.
+
+Open a scad file then menu Design/Render (F6) then File/Export/Export as STL (F7)
+
+# How to print the name of the song on the disc
+
+The Write.scad and it's dependancies are required to have the title of the tune written on the disc. 
+
+Move the files under writescad (updated version from https://www.thingiverse.com/thing:16193) [where OpenScad can find it](https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Libraries).
 
 
+# Thanks
+
+* [FredMurphy](https://github.com/FredMurphy) to have created and shared "Fred Record Player" source code, it was of a great help, notably to implement the export to scad feature.
+
+More informations on running Fred Record Player under linux are available in the [fred_record_player](doc/fred_record_player.md) file
+
+* Writing functions by HarlanDMii http://www.thingiverse.com/thing:16193
+
+* Contributors
