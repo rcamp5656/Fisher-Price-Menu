@@ -17,8 +17,9 @@ pip install python-rtmidi
 pin install setuptools wheel
 pip install –upgrade setuptools wheel
 pip install playsound
-pip install pretty-midi
+pip install pretty_midi
 pip install numpy
+pip install pygame
 
 And there are a few other dependencies once I remember them all.
 
